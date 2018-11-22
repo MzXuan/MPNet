@@ -11,6 +11,8 @@ pods_install_headers(graph_renderer.h DESTINATION renderers)
 # make the library public
 pods_install_libraries(renderers)
 
+include_directories(/home/xuan/Code/MPNet/data_generation/lcmtypes/lcmtypes/c)
+
 target_link_libraries(renderers
     ${GTK2_LDFLAGS}
     ${OPENGL_LIBRARIES}

@@ -252,7 +252,7 @@ static void renderer_graph_draw(BotViewer *viewer, BotRenderer *renderer)
     bot_gl_draw_cube ();
     glPopMatrix ();
 
-    return
+    return;
 } 
 
 

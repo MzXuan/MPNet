@@ -12,7 +12,7 @@
 
 #include "rrts.hpp"
 #include "system_single_integrator.h"
-#include<list>
+#include <list>
 #include <time.h>
 #include <string>
 #include <sstream>
@@ -82,6 +82,7 @@ int main () {
     // load obstacle locations 
     double fnum[20][2];
     ifstream in("obs.dat", ios::in | ios::binary);
+
     in.read((char *) &fnum, sizeof fnum);
     //We drop 7 obstacle blocks in the workspace to generate random environments using 20P7=77520 permutations. Note that we can have now 77520 different environments but we use 110 envs only
     int perm[77520][7];
@@ -93,22 +94,24 @@ int main () {
     
    
    int i=0;
+
    for (i=0;i<110;i++){
     	string env_no;          // string which will contain the result
     	ostringstream convert2;   // stream used for the conversion
     	convert2 << i;      // insert the textual representation of 'Number' in the characters in the stream
     	env_no =convert2.str();
-    	string path="env/e"+env_no;
+    	string path="e"+env_no;
+    	std::cout<<"path: "<< path;
     	mkdir(path.c_str(),ACCESSPERMS); // create folder with env label to store generated trajectories
 		/*
 		We also generted a random set of nodes from obstacle-free space, denoted as graph. These nodes are used as start and goal pairs 
 		*/
 		double fnum2[50000][2];
-		path="graph/graph"+env_no+".dat";
+		path="graph"+env_no+".dat";
 	    ifstream in3(path.c_str(), ios::in | ios::binary);
 	    in3.read((char *) &fnum2, sizeof fnum2);
 	    int t=0;
-  		for (int t=0;t<1;t++){  
+  		for (int t=0;t<3;t++){  
 			cout<<"t"<<t<<endl;  
 			 
 			planner_t rrts;
@@ -135,6 +138,8 @@ int main () {
 			system.regionOperating.size[2] = 0.0;
 			// Define the goal region		
 			system.regionGoal.setNumDimensions(2);
+			std::cout << "fnum[0]: " << fnum2[t][0] << std::endl;
+			std::cout << "fnum[1]: " << fnum2[t][1] << std::endl;
 			system.regionGoal.center[0] =fnum2[t][0];
 			system.regionGoal.center[1] =fnum2[t][1];
 			system.regionGoal.center[2] = 0.0;// fnum2[t][2] //if 3D
@@ -152,7 +157,9 @@ int main () {
 
  
 			obstacle->setNumDimensions(2);
-			obstacle->center[0] =fnum[perm[i][0]][0];
+			std::cout << "pfnum[0]: " << fnum[perm[i][0]][0] << std::endl;
+			std::cout << "pfnum[1]: " << fnum[perm[i][0]][1] << std::endl;
+			obstacle->center[0] = fnum[perm[i][0]][0];
 			obstacle->center[1] = fnum[perm[i][0]][1];
 			obstacle->center[2] = 0.0;
 			obstacle->size[0] = 5.0;
@@ -434,7 +441,7 @@ int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string
 
   		ofstream out(("e"+fod+"/path"+Result+".dat").c_str(), ios::out | ios::binary);
   		if(!out) {
-      		cout << "Cannot open file.";
+      		cout << "Cannot open file_e.";
                 return 1;
         }
 
@@ -488,9 +495,9 @@ int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string
     convert << num;      // insert the textual representation of 'Number' in the characters in the stream
     Result =convert.str(); // set 'Result' to the contents of the stream
 
-  	ofstream out(("env/e"+fod+"/path"+Result+".dat").c_str(), ios::out | ios::binary);
+  	ofstream out(("e"+fod+"/path"+Result+".dat").c_str(), ios::out | ios::binary);
  	if(!out) {
-      cout << "Cannot open file.";
+      cout << "Cannot open file_env.";
                 return 1;
                }
 

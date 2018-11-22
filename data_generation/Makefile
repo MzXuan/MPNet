@@ -6,6 +6,8 @@ SUBDIRS:=$(shell grep -v "^\#" tobuild.txt)
 #force to build on the top level build dir
 BUILD_PREFIX=`pwd`/build
 
+export PKG_CONFIG_PATH := /home/xuan/Code/MPNet/data_generation/lcmtypes/pod-build/lib/pkgconfig:$(PKG_CONFIG_PATH)
+# echo $(PKG_CONFIG_PATH)
 
 # build quietly by default.  For a verbose build, run "make VERBOSE=1"
 $(VERBOSE).SILENT:
